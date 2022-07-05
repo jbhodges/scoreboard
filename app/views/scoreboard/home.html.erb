@@ -1,0 +1,409 @@
+<div id="container">
+  <div id="scoreboard-container">
+  <h1>EGELAND FIELD</h1>
+  <table id="runs">
+    <thead>
+      <tr>
+        <th id="teamheader"></th>
+        <th id="inning1header">1</th>
+        <th id="inning2header">2</th>
+        <th id="inning3header">3</th>
+        <th id="inning4header">4</th>
+        <th id="inning5header">5</th>
+        <th id="inning6header">6</th>
+        <th id="inning7header">7</th>
+        <th id="inning8header">8</th>
+        <th id="inning9header">9</th>
+        <th id="runsheader">Runs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th id="visitor_name" class="team-name">VISITOR</th>
+        <td id="visitor_1" class="current-inning">0</td>
+        <td id="visitor_2">0</td>
+        <td id="visitor_3">0</td>
+        <td id="visitor_4">0</td>
+        <td id="visitor_5">0</td>
+        <td id="visitor_6">0</td>
+        <td id="visitor_7">0</td>
+        <td id="visitor_8">0</td>
+        <td id="visitor_9">0</td>
+        <td id="visitor_runs">00</td>
+      </tr>
+      <tr>
+        <th id="home_name" class="team-name">HOME</th>
+        <td id="home_1">0</td>
+        <td id="home_2">0</td>
+        <td id="home_3">0</td>
+        <td id="home_4">0</td>
+        <td id="home_5">0</td>
+        <td id="home_6">0</td>
+        <td id="home_7">0</td>
+        <td id="home_8">0</td>
+        <td id="home_9">0</td>
+        <td id="home_runs">00</td>
+      </tr>
+    </tbody>
+  </table>
+  <table id="lights">
+
+    <tr>
+      <th>SINGLES</th>
+      <th>DOUBLES</th>
+      <th>TRIPLES</th>
+      <th>OUTS</th>
+    </tr>
+    <tr>
+      <td class="red-lights" id="single-lights">
+        <div class="led-box">
+            <div class="led-red" id="single-light-1"></div>
+            <div class="led-red" id="single-light-2"></div>
+            <div class="led-red" id="single-light-3"></div>
+        </div>
+      </td>
+      <td class="red-lights" id="double-lights">
+        <div class="led-box">
+            <div class="led-red" id="double-light-1"></div>
+            <div class="led-red" id="double-light-2"></div>
+            <div class="led-red" id="double-light-3"></div>
+        </div>
+      </td>
+      <td class="red-lights" id="triple-lights">
+        <div class="led-box">
+            <div class="led-red" id="triple-light-1"></div>
+            <div class="led-red" id="triple-light-2"></div>
+            <div class="led-red" id="triple-light-3"></div>
+        </div>
+      </td>
+      <td class="red-lights" id="out-lights">
+        <div class="led-box">
+            <div class="led-red" id="out-light-1"></div>
+            <div class="led-red" id="out-light-2"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
+  </div>
+  <div id="controller-container">
+    <table id="controller">
+      <tr>
+        <td>INNING <button type="button" id="inning-down">PREV</button><button type="button" id="inning-up">NEXT</button></td>
+        <td id="inning">TOP 1</td>
+      </tr>
+      <tr>
+        <td>SINGLES <button type="button" id="single-down">-1</button><button type="button" id="single-up">+1</button></td>
+        <td id="singles">0</td>
+      </tr>
+      <tr>
+        <td>DOUBLES <button type="button" id="double-down">-1</button><button type="button" id="double-up">+1</button></td>
+        <td id="doubles">0</td>
+      </tr>
+      <tr>
+        <td>TRIPLES <button type="button" id="triple-down">-1</button><button type="button" id="triple-up">+1</button></td>
+        <td id="triples">0</td>
+      </tr>
+      <tr>
+        <td>RUNS <button type="button" id="run-down">-1</button><button type="button" id="run-up">+1</button></td>
+        <td id="runs-count">0</td>
+      </tr>
+      <tr>
+        <td>OUTS <button type="button" id="out-down">-1</button><button type="button" id="out-up">+1</button></td>
+        <td id="out-count">0</td>
+      </tr>
+    </table>
+    </div>
+</div>
+
+<script>
+  var home_scores = [0,0,0,0,0,0,0,0,0];
+  var visitor_scores = [0,0,0,0,0,0,0,0,0];
+  var inning = 1;
+  var at_bat = "visitor";
+
+  document.getElementById("single-down").onclick = function() {singleDown()};
+  document.getElementById("single-up").onclick = function() {singleUp()};
+  document.getElementById("double-down").onclick = function() {doubleDown()};
+  document.getElementById("double-up").onclick = function() {doubleUp()};
+  document.getElementById("triple-down").onclick = function() {tripleDown()};
+  document.getElementById("triple-up").onclick = function() {tripleUp()};
+  document.getElementById("out-down").onclick = function() {outDown()};
+  document.getElementById("out-up").onclick = function() {outUp()};
+  document.getElementById("run-down").onclick = function() {runDown()};
+  document.getElementById("run-up").onclick = function() {runUp()};
+  document.getElementById("inning-down").onclick = function() {inningDown()};
+  document.getElementById("inning-up").onclick = function() {inningUp()};
+
+  function singleDown() {
+    var singles = document.getElementById("singles");
+    var singlesCount = Number(singles.innerHTML);
+    if (singlesCount > 0) {
+      singlesCount--;
+    }
+    singles.innerHTML = singlesCount;
+    for (let i = 3; i > singlesCount; i--) {
+      var light = document.getElementById("single-light-" + i);
+      light.classList.remove("led-red-on");
+      light.classList.add("led-red");
+    }
+
+  }
+
+  function singleUp() {
+    var singles = document.getElementById("singles");
+    var singlesCount = Number(singles.innerHTML);
+    if (singlesCount < 3) {
+      singlesCount++;
+    }
+    singles.innerHTML = singlesCount;
+    for (let i = 1; i <= singlesCount; i++) {
+      var light = document.getElementById("single-light-" + i);
+      light.classList.remove("led-red");
+      light.classList.add("led-red-on");
+    }
+  }
+
+  function doubleDown() {
+    var doubles = document.getElementById("doubles");
+    var doublesCount = Number(doubles.innerHTML);
+    if (doublesCount > 0) {
+      doublesCount--;
+    }
+    doubles.innerHTML = doublesCount;
+    for (let i = 3; i > doublesCount; i--) {
+      var light = document.getElementById("double-light-" + i);
+      light.classList.remove("led-red-on");
+      light.classList.add("led-red");
+    }
+
+  }
+
+  function doubleUp() {
+    var doubles = document.getElementById("doubles");
+    var doublesCount = Number(doubles.innerHTML);
+    if (doublesCount < 3) {
+      doublesCount++;
+    }
+    doubles.innerHTML = doublesCount;
+    for (let i = 1; i <= doublesCount; i++) {
+      var light = document.getElementById("double-light-" + i);
+      light.classList.remove("led-red");
+      light.classList.add("led-red-on");
+    }
+  }
+
+  function tripleDown() {
+    var triples = document.getElementById("triples");
+    var triplesCount = Number(triples.innerHTML);
+    if (triplesCount > 0) {
+      triplesCount--;
+    }
+    triples.innerHTML = triplesCount;
+    for (let i = 3; i > triplesCount; i--) {
+      var light = document.getElementById("triple-light-" + i);
+      light.classList.remove("led-red-on");
+      light.classList.add("led-red");
+    }
+
+  }
+
+  function tripleUp() {
+    var triples = document.getElementById("triples");
+    var triplesCount = Number(triples.innerHTML);
+    if (triplesCount < 3) {
+      triplesCount++;
+    }
+    triples.innerHTML = triplesCount;
+    for (let i = 1; i <= triplesCount; i++) {
+      var light = document.getElementById("triple-light-" + i);
+      light.classList.remove("led-red");
+      light.classList.add("led-red-on");
+    }
+  }
+
+  function outDown() {
+    var outs = document.getElementById("out-count");
+    var outsCount = Number(outs.innerHTML);
+    if (outsCount > 0) {
+      outsCount--;
+    }
+    outs.innerHTML = outsCount;
+    for (let i = 2; i > outsCount; i--) {
+      var light = document.getElementById("out-light-" + i);
+      light.classList.remove("led-red-on");
+      light.classList.add("led-red");
+    }
+
+  }
+
+  function outUp() {
+    var outs = document.getElementById("out-count");
+    var outsCount = Number(outs.innerHTML);
+    if (outsCount < 2) {
+      outsCount++;
+    }
+    outs.innerHTML = outsCount;
+    for (let i = 1; i <= outsCount; i++) {
+      var light = document.getElementById("out-light-" + i);
+      light.classList.remove("led-red");
+      light.classList.add("led-red-on");
+    }
+  }
+
+  function runDown() {
+    if (at_bat == "visitor") {
+      var runs = visitor_scores[inning - 1];
+    } else {
+      var runs = home_scores[inning - 1];
+    }
+    if (runs > 0) {
+      runs--;
+      var runsElement = document.getElementById("runs-count");
+      runsElement.innerHTML = runs;
+      if (at_bat == "visitor") {
+        visitor_scores[inning - 1] = runs;
+        var inningElement = document.getElementById("visitor_" + inning);
+        inningElement.innerHTML = runs;
+        var totalRuns = document.getElementById("visitor_runs");
+        totalRuns.innerHTML = visitor_scores.reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+      } else {
+        home_scores[inning - 1] = runs;
+        var inningElement = document.getElementById("home_" + inning);
+        inningElement.innerHTML = runs;
+        var totalRuns = document.getElementById("home_runs");
+        totalRuns.innerHTML = home_scores.reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+      }
+    }
+  }
+
+  function runUp() {
+    if (at_bat == "visitor") {
+      var runs = visitor_scores[inning - 1];
+    } else {
+      var runs = home_scores[inning - 1];
+    }
+
+      runs++;
+      var runsElement = document.getElementById("runs-count");
+      runsElement.innerHTML = runs;
+      if (at_bat == "visitor") {
+        visitor_scores[inning - 1] = runs;
+        var inningElement = document.getElementById("visitor_" + inning);
+        inningElement.innerHTML = runs;
+        var totalRuns = document.getElementById("visitor_runs");
+        totalRuns.innerHTML = visitor_scores.reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+      } else {
+        home_scores[inning - 1] = runs;
+        var inningElement = document.getElementById("home_" + inning);
+        inningElement.innerHTML = runs;
+        var totalRuns = document.getElementById("home_runs");
+        totalRuns.innerHTML = home_scores.reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+      }
+
+  }
+
+  function inningDown() {
+    if (at_bat == "visitor") {
+      if (inning > 0) {
+        var inningDetail = document.getElementById("visitor_" + inning);
+        inningDetail.classList.remove("current-inning");
+        inning--;
+        at_bat = "home"
+        var inningElement = document.getElementById("inning");
+        inningElement.innerHTML = "BOT " + inning;
+        inningDetail = document.getElementById("home_" + inning);
+        inningDetail.classList.add("current-inning");
+        resetInning();
+      }
+    } else {
+      at_bat = "visitor"
+      var inningElement = document.getElementById("inning");
+      inningElement.innerHTML = "TOP " + inning;
+      var inningDetail = document.getElementById("home_" + inning);
+      inningDetail.classList.remove("current-inning");
+      inningDetail = document.getElementById("visitor_" + inning);
+      inningDetail.classList.add("current-inning");
+      resetInning();
+    }
+  }
+
+  function inningUp() {
+    if (at_bat == "visitor") {
+
+
+        at_bat = "home"
+        var inningElement = document.getElementById("inning");
+        inningElement.innerHTML = "BOT " + inning;
+        var inningDetail = document.getElementById("visitor_" + inning);
+        inningDetail.classList.remove("current-inning");
+        inningDetail = document.getElementById("home_" + inning);
+        inningDetail.classList.add("current-inning");
+        resetInning();
+    } else {
+      if (inning < 9) {
+      at_bat = "visitor"
+      var inningDetail = document.getElementById("home_" + inning);
+      inningDetail.classList.remove("current-inning");
+      inning++;
+      var inningElement = document.getElementById("inning");
+      inningElement.innerHTML = "TOP " + inning;
+      inningDetail = document.getElementById("visitor_" + inning);
+      inningDetail.classList.add("current-inning");
+      resetInning();
+    }
+  }
+  }
+
+  function resetInning() {
+    var singles = document.getElementById("singles");
+    singles.innerHTML = "0";
+    light = document.getElementById("single-light-1");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("single-light-2");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("single-light-3");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    var doubles = document.getElementById("doubles");
+    doubles.innerHTML = "0";
+    light = document.getElementById("double-light-1");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("double-light-2");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("double-light-3");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    var triples = document.getElementById("triples");
+    triples.innerHTML = "0";
+    light = document.getElementById("triple-light-1");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("triple-light-2");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("triple-light-3");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    var outs = document.getElementById("out-count");
+    outs.innerHTML = "0";
+    light = document.getElementById("out-light-1");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    light = document.getElementById("out-light-2");
+    light.classList.remove("led-red-on");
+    light.classList.add("led-red");
+    if (at_bat == "visitor") {
+      var runs = visitor_scores[inning - 1];
+      var runsElement = document.getElementById("runs-count");
+      runsElement.innerHTML = runs;
+    } else {
+      var runs = home_scores[inning - 1];
+      var runsElement = document.getElementById("runs-count");
+      runsElement.innerHTML = runs;
+    }
+  }
+</script>
