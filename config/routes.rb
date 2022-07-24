@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   root             'scoreboard#home'
+  post              'update_scoreboard'  => 'scoreboard#update_scoreboard'
 end
