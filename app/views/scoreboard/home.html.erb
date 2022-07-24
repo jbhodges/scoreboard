@@ -120,6 +120,10 @@
   var visitor_scores = [0,0,0,0,0,0,0,0,0];
   var inning = 1;
   var at_bat = "visitor";
+  var singles = 0;
+  var doubles = 0;
+  var triples = 0;
+  var outs = 0;
 
   document.getElementById("single-down").onclick = function() {singleDown()};
   document.getElementById("single-up").onclick = function() {singleUp()};
@@ -135,119 +139,116 @@
   document.getElementById("inning-up").onclick = function() {inningUp()};
 
   function singleDown() {
-    var singles = document.getElementById("singles");
-    var singlesCount = Number(singles.innerHTML);
-    if (singlesCount > 0) {
-      singlesCount--;
+    singlesElem = document.getElementById("singles");
+    if (singles > 0) {
+      singles--;
     }
-    singles.innerHTML = singlesCount;
-    for (let i = 3; i > singlesCount; i--) {
+    singlesElem.innerHTML = singles;
+    for (let i = 3; i > singles; i--) {
       var light = document.getElementById("single-light-" + i);
       light.classList.remove("led-red-on");
       light.classList.add("led-red");
     }
-
+    updateScoreboard();
   }
 
   function singleUp() {
-    var singles = document.getElementById("singles");
-    var singlesCount = Number(singles.innerHTML);
-    if (singlesCount < 3) {
-      singlesCount++;
+    singlesElem = document.getElementById("singles");
+    if (singles < 3) {
+      singles++;
     }
-    singles.innerHTML = singlesCount;
-    for (let i = 1; i <= singlesCount; i++) {
+    singlesElem.innerHTML = singles;
+    for (let i = 1; i <= singles; i++) {
       var light = document.getElementById("single-light-" + i);
       light.classList.remove("led-red");
       light.classList.add("led-red-on");
     }
+    updateScoreboard();
   }
 
   function doubleDown() {
-    var doubles = document.getElementById("doubles");
-    var doublesCount = Number(doubles.innerHTML);
-    if (doublesCount > 0) {
-      doublesCount--;
+    doublesElem = document.getElementById("doubles");
+    if (doubles > 0) {
+      doubles--;
     }
-    doubles.innerHTML = doublesCount;
-    for (let i = 3; i > doublesCount; i--) {
+    doublesElem.innerHTML = doubles;
+    for (let i = 3; i > doubles; i--) {
       var light = document.getElementById("double-light-" + i);
       light.classList.remove("led-red-on");
       light.classList.add("led-red");
     }
-
+    updateScoreboard();
   }
 
   function doubleUp() {
-    var doubles = document.getElementById("doubles");
-    var doublesCount = Number(doubles.innerHTML);
-    if (doublesCount < 3) {
-      doublesCount++;
+    doublesElem = document.getElementById("doubles");
+    if (doubles < 3) {
+      doubles++;
     }
-    doubles.innerHTML = doublesCount;
-    for (let i = 1; i <= doublesCount; i++) {
+    doublesElem.innerHTML = doubles;
+    for (let i = 1; i <= doubles; i++) {
       var light = document.getElementById("double-light-" + i);
       light.classList.remove("led-red");
       light.classList.add("led-red-on");
     }
+    updateScoreboard();
   }
 
   function tripleDown() {
-    var triples = document.getElementById("triples");
-    var triplesCount = Number(triples.innerHTML);
-    if (triplesCount > 0) {
-      triplesCount--;
+    triplesElem = document.getElementById("triples");
+    if (triples > 0) {
+      triples--;
     }
-    triples.innerHTML = triplesCount;
-    for (let i = 3; i > triplesCount; i--) {
+    triplesElem.innerHTML = triples;
+    for (let i = 3; i > triples; i--) {
       var light = document.getElementById("triple-light-" + i);
       light.classList.remove("led-red-on");
       light.classList.add("led-red");
     }
-
+    updateScoreboard();
   }
 
   function tripleUp() {
-    var triples = document.getElementById("triples");
-    var triplesCount = Number(triples.innerHTML);
-    if (triplesCount < 3) {
-      triplesCount++;
+    triplesElem = document.getElementById("triples");
+    if (triples < 3) {
+      triples++;
     }
-    triples.innerHTML = triplesCount;
-    for (let i = 1; i <= triplesCount; i++) {
+    triplesElem.innerHTML = triples;
+    for (let i = 1; i <= triples; i++) {
       var light = document.getElementById("triple-light-" + i);
       light.classList.remove("led-red");
       light.classList.add("led-red-on");
     }
+    updateScoreboard();
   }
 
   function outDown() {
-    var outs = document.getElementById("out-count");
-    var outsCount = Number(outs.innerHTML);
-    if (outsCount > 0) {
-      outsCount--;
+    outsElem = document.getElementById("out-count");
+    if (outs > 0) {
+      outs--;
     }
-    outs.innerHTML = outsCount;
-    for (let i = 2; i > outsCount; i--) {
+    outsElem.innerHTML = outs;
+    for (let i = 2; i > outs; i--) {
       var light = document.getElementById("out-light-" + i);
       light.classList.remove("led-red-on");
       light.classList.add("led-red");
     }
+    updateScoreboard();
 
   }
 
   function outUp() {
-    var outs = document.getElementById("out-count");
-    var outsCount = Number(outs.innerHTML);
-    if (outsCount < 2) {
-      outsCount++;
+    outsElem = document.getElementById("out-count");
+    if (outs < 2) {
+      outs++;
     }
-    outs.innerHTML = outsCount;
-    for (let i = 1; i <= outsCount; i++) {
+    outsElem.innerHTML = outs;
+    for (let i = 1; i <= outs; i++) {
       var light = document.getElementById("out-light-" + i);
       light.classList.remove("led-red");
       light.classList.add("led-red-on");
     }
+    updateScoreboard();
   }
 
   function runDown() {
@@ -274,6 +275,9 @@
         totalRuns.innerHTML = home_scores.reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
       }
     }
+    updateScoreboard();
+
+
   }
 
   function runUp() {
@@ -299,7 +303,7 @@
         var totalRuns = document.getElementById("home_runs");
         totalRuns.innerHTML = home_scores.reduce((partialSum, a) => partialSum + a, 0).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
       }
-
+      updateScoreboard();
   }
 
   function inningDown() {
@@ -325,6 +329,7 @@
       inningDetail.classList.add("current-inning");
       resetInning();
     }
+
   }
 
   function inningUp() {
@@ -352,11 +357,17 @@
       resetInning();
     }
   }
+
   }
 
   function resetInning() {
-    var singles = document.getElementById("singles");
-    singles.innerHTML = "0";
+    singles = 0;
+    doubles = 0;
+    triples = 0;
+    outs = 0;
+
+    singlesElem = document.getElementById("singles");
+    singlesElem.innerHTML = singles;
     light = document.getElementById("single-light-1");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
@@ -366,8 +377,8 @@
     light = document.getElementById("single-light-3");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
-    var doubles = document.getElementById("doubles");
-    doubles.innerHTML = "0";
+    doublesElem = document.getElementById("doubles");
+    doublesElem.innerHTML = doubles;
     light = document.getElementById("double-light-1");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
@@ -377,8 +388,8 @@
     light = document.getElementById("double-light-3");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
-    var triples = document.getElementById("triples");
-    triples.innerHTML = "0";
+    triplesElem = document.getElementById("triples");
+    triplesElem.innerHTML = triples;
     light = document.getElementById("triple-light-1");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
@@ -388,8 +399,8 @@
     light = document.getElementById("triple-light-3");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
-    var outs = document.getElementById("out-count");
-    outs.innerHTML = "0";
+    outsElem = document.getElementById("out-count");
+    outsElem.innerHTML = outs;
     light = document.getElementById("out-light-1");
     light.classList.remove("led-red-on");
     light.classList.add("led-red");
@@ -405,5 +416,45 @@
       var runsElement = document.getElementById("runs-count");
       runsElement.innerHTML = runs;
     }
+    updateScoreboard();
   }
+
+  function updateScoreboard(){
+    var hs = home_scores;
+    var vs = visitor_scores;
+    var inn = inning;
+    var ab = at_bat;
+    var sing = singles;
+    var doub = doubles;
+    var trip = triples;
+    var out = outs;
+    var data = {
+      home_scores: hs,
+      visitor_scores: vs,
+      inning: inn,
+      at_bat: ab,
+      singles: sing,
+      doubles: doub,
+      triples: trip,
+      outs: out,
+    }
+    $.ajax({
+      url: "<%= update_scoreboard_url %>", // this will be routed
+      type: 'POST',
+      dataType: 'json', // payload is json
+      contentType : 'application/json',
+      data: JSON.stringify(data),
+      async: true,
+      dataType: "json",
+      success: function (data) {
+                    console.log('success');
+
+                }
+    })
+
+  }
+
+
+
+
 </script>
